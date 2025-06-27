@@ -12,11 +12,8 @@ for epoch in range(EPOCHS):
     t0 = time.time()
     running_loss = 0.0
     for i, views in enumerate(tqdm(train_dl)):
-        views = views[0][0]  # ← This line is essential
         projections = simclr_model([view.to(DEVICE) for view in views])
-        sample = next(iter(train_dl))
-        print(type(sample), len(sample))
-        print(type(sample[0]), type(sample[0][0]))
+        
         logits, labels = cont_loss(projections, temp=0.5)
         loss = criterion(logits, labels)
         optimizer.zero_grad()
