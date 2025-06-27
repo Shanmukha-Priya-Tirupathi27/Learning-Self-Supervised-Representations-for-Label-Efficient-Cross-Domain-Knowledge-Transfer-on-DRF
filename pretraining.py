@@ -2,7 +2,7 @@ from tqdm import tqdm
 from define_simclr import simclr_model
 from contrastive_loss import cont_loss
 from config import DEVICE
-from define_simclr import scheduler,optimizer,criterion
+from define_simclr import optimizer,criterion
 import torch
 import time
 from downstream_dataloader import train_dl
