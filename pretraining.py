@@ -12,7 +12,7 @@ for epoch in range(EPOCHS):
     t0 = time.time()
     running_loss = 0.0
     for i, views in enumerate(tqdm(train_dl)):
-        views = views[0]  # unpack the first element if it's a tuple
+        views = views[0]  # ← This line is essential
         projections = simclr_model([view.to(DEVICE) for view in views])
         logits, labels = cont_loss(projections, temp=0.5)
         loss = criterion(logits, labels)
