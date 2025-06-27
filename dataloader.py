@@ -39,22 +39,22 @@ custom_transform = ContrastiveLearningViewGenerator(base_transform=base_transfor
 
 # complete dataset
 trainn_ds = CustomDataset(
-    list_images=glob.glob("/home/ccet/SIH/Data/ind-data/sirisplit/train/**/*.tif",recursive = True),
+    list_images=glob.glob("/kaggle/input/aptos2019",recursive = True),
     transform=custom_transform
 )
 
 # train and valid dataset
 
 train2_ds = ImageFolder(
-    root="/home/ccet/SIH/Data/perc/siri-mulperc/10/train/",
+    root="/kaggle/input/aptos2019/train_images/",
     transform=custom_transform
 )
 valid2_ds = ImageFolder(
-    root="/home/ccet/SIH/Data/perc/siri-mulperc/10/val/",
+    root="/kaggle/input/aptos2019/val_images/",
     transform=custom_transform
 )
 test2_ds = ImageFolder(
-    root="/home/ccet/SIH/Data/perc/siri-mulperc/10/test/",
+    root="/kaggle/input/aptos2019/test_images/",
     transform=custom_transform
 )
 
