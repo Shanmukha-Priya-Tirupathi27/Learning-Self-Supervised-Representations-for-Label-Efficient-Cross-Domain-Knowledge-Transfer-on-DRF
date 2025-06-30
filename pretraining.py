@@ -12,25 +12,14 @@ for epoch in range(EPOCHS):
     t0 = time.time()
     running_loss = 0.0
     for i, views in enumerate(tqdm(train_dl)):
-        print("Type of views:", type(views))
-        for i, v in enumerate(views):
-            print(f"[{i}] Type: {type(v)}, Shape: {getattr(v, 'shape', 'N/A')}")
+    # views: Tensor of shape [B, 2, 3, 224, 224]
+        if isinstance(views, list) or isinstance(views, tuple):
+            views = torch.stack(views)  # Just in case
 
-        #projections = simclr_model([view.to(DEVICE) for view in views])
-        flat_views = []
-        for pair in views:
-            if isinstance(pair, (list, tuple)):
-                for v in pair:
-                    if isinstance(v, torch.Tensor) and v.dim() >= 3:
-                        flat_views.append(v.unsqueeze(0).to(DEVICE))
-            elif isinstance(pair, torch.Tensor) and pair.dim() >= 3:
-                flat_views.append(pair.unsqueeze(0).to(DEVICE))
-
-        if len(flat_views) == 0:
-            raise ValueError("No valid image tensors found in batch")
-
-        inputs = torch.cat(flat_views, dim=0)
-
+    # Reshape to [2*B, 3, 224, 224]
+        bsz = views.shape[0]
+        view1, view2 = views[:, 0], views[:, 1]  # Each is [B, 3, 224, 224]
+        inputs = torch.cat([view1, view2], dim=0).to(DEVICE)  # [2*B, 3, 224, 224]
 
         projections = simclr_model(inputs)
 
@@ -40,6 +29,7 @@ for epoch in range(EPOCHS):
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
+
     scheduler.step()
         # print statistics
     if(epoch % 10 == 0) :                        
