@@ -12,6 +12,10 @@ for epoch in range(EPOCHS):
     t0 = time.time()
     running_loss = 0.0
     for i, views in enumerate(tqdm(train_dl)):
+        print("Type of views:", type(views))
+        for i, v in enumerate(views):
+            print(f"[{i}] Type: {type(v)}, Shape: {getattr(v, 'shape', 'N/A')}")
+
         #projections = simclr_model([view.to(DEVICE) for view in views])
         flat_views = [v.unsqueeze(0).to(DEVICE) for pair in views for v in pair]
         inputs = torch.cat(flat_views, dim=0)
