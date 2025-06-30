@@ -26,7 +26,11 @@ for epoch in range(EPOCHS):
             elif isinstance(pair, torch.Tensor) and pair.dim() >= 3:
                 flat_views.append(pair.unsqueeze(0).to(DEVICE))
 
+        if len(flat_views) == 0:
+            raise ValueError("No valid image tensors found in batch")
+
         inputs = torch.cat(flat_views, dim=0)
+
 
         projections = simclr_model(inputs)
 
