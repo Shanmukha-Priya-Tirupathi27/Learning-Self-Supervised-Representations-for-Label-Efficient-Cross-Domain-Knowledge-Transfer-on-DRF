@@ -15,10 +15,9 @@ for epoch in range(EPOCHS):
 
     for i, batch in enumerate(tqdm(train_dl)):
         # Unpack the two views and move them to DEVICE
-        view1, view2 = [v.to(DEVICE) for v in batch]
-
-        # Stack the two batches: shape becomes [2B, C, H, W]
-        inputs = torch.cat([view1, view2], dim=0)
+        view1_batch = torch.stack([v[0] for v in batch]).to(DEVICE)
+        view2_batch = torch.stack([v[1] for v in batch]).to(DEVICE)
+        inputs = torch.cat([view1_batch, view2_batch], dim=0)
 
         # Forward pass
         projections = simclr_model(inputs)
