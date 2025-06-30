@@ -26,7 +26,7 @@ for epoch in range(EPOCHS):
             elif isinstance(pair, torch.Tensor) and pair.dim() >= 3:
                 flat_views.append(pair.unsqueeze(0).to(DEVICE))
 
-inputs = torch.cat(flat_views, dim=0)
+        inputs = torch.cat(flat_views, dim=0)
 
         projections = simclr_model(inputs)
 
