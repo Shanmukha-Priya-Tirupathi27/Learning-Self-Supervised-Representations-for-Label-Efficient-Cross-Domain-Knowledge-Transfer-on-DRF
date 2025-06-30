@@ -13,9 +13,10 @@ for epoch in range(EPOCHS):
     running_loss = 0.0
     for i, views in enumerate(tqdm(train_dl)):
         #projections = simclr_model([view.to(DEVICE) for view in views])
-        flat_views = [v.to(DEVICE) for view_pair in views for v in view_pair]
+        flat_views = [v.unsqueeze(0).to(DEVICE) for pair in views for v in pair]
         inputs = torch.cat(flat_views, dim=0)
         projections = simclr_model(inputs)
+
         logits, labels = cont_loss(projections, temp=0.5)
         loss = criterion(logits, labels)
         optimizer.zero_grad()
