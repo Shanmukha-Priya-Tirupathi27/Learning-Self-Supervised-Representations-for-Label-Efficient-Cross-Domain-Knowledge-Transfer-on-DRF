@@ -17,8 +17,17 @@ for epoch in range(EPOCHS):
             print(f"[{i}] Type: {type(v)}, Shape: {getattr(v, 'shape', 'N/A')}")
 
         #projections = simclr_model([view.to(DEVICE) for view in views])
-        flat_views = [v.unsqueeze(0).to(DEVICE) for pair in views for v in pair]
-        inputs = torch.cat(flat_views, dim=0)
+        flat_views = []
+        for pair in views:
+            if isinstance(pair, (list, tuple)):
+                for v in pair:
+                    if isinstance(v, torch.Tensor) and v.dim() >= 3:
+                        flat_views.append(v.unsqueeze(0).to(DEVICE))
+            elif isinstance(pair, torch.Tensor) and pair.dim() >= 3:
+                flat_views.append(pair.unsqueeze(0).to(DEVICE))
+
+inputs = torch.cat(flat_views, dim=0)
+
         projections = simclr_model(inputs)
 
         logits, labels = cont_loss(projections, temp=0.5)
